@@ -28,3 +28,6 @@ __pycache__/
 .cache/
 .venv/
 venv/
+scripts/face-composite/models/*.tflite
+scripts/face-composite/models/*.task
+data/face-composite/
