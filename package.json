@@ -37,6 +37,7 @@
     "face:composite": "tsx scripts/face-composite-run.ts",
     "face:models": "bash scripts/face-composite/download-models.sh",
     "yuna:identity": "tsx scripts/yuna-identity-workbench.ts",
+    "face:pass-loop": "python3 scripts/face-composite/pass-loop.py",
     "photos:publish-product": "tsx scripts/publish-photo-to-product.ts",
     "test": "vitest run",
     "test:watch": "vitest",

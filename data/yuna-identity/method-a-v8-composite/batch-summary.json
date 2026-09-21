@@ -8,6 +8,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/91444de42876e6a3_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -15,14 +16,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -23.432329177856445
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.7791475983088348,
+        "angle_deg": -12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.04468749836087227,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.15334159135818481
       }
     },
     {
@@ -30,6 +38,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/219b5ad346fad717_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -37,36 +46,51 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": 14.3052396774292
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.5434585545200319,
+        "angle_deg": 12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.035234373062849045,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.12233620882034302
       }
     },
     {
       "target": "/workspace/assets/photos/yuna/hair/6ad876ce59fc0862.jpg",
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/6ad876ce59fc0862_v8.jpg",
-      "version": "v8",
+      "version": "v8-frontal",
+      "mode": "frontal",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
-        "x": 97,
-        "y": 0,
-        "w": 807,
-        "h": 1000
+        "x": 220,
+        "y": 148,
+        "w": 561,
+        "h": 549
+      },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": true,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -1.7996866703033447
+      },
+      "alignment": {
+        "scale_x": 0.5238403880143191,
+        "scale_y": 0.5238403880143191,
+        "raw_iod_ratio": 0.5238404019917983,
+        "angle_deg": -1.0340828895568848
       },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.03394531086087227,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.07978429645299911
       }
     },
     {
@@ -74,6 +98,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/97f13b4d416ca618_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -81,14 +106,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -30.552330017089844
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.7314664955910077,
+        "angle_deg": -12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.04339843988418579,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.1460438221693039
       }
     },
     {
@@ -96,6 +128,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/67486135aa6b319a_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -103,36 +136,51 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -24.894533157348633
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.7697135438939281,
+        "angle_deg": -12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.03996093571186066,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.11273881793022156
       }
     },
     {
       "target": "/workspace/assets/photos/yuna/nail/aecdc211e1392727.jpg",
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/aecdc211e1392727_v8.jpg",
-      "version": "v8",
+      "version": "v8-frontal",
+      "mode": "frontal",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
-        "x": 97,
-        "y": 0,
-        "w": 807,
-        "h": 1000
+        "x": 220,
+        "y": 148,
+        "w": 561,
+        "h": 549
+      },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": true,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -9.207746505737305
+      },
+      "alignment": {
+        "scale_x": 0.9769126855463256,
+        "scale_y": 0.9769126855463256,
+        "raw_iod_ratio": 0.9769126838894471,
+        "angle_deg": -7.999999523162842
       },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.05585937201976776,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.2148463875055313
       }
     },
     {
@@ -140,6 +188,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/f918f53ee3242943_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -147,36 +196,51 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -26.366674423217773
+      },
+      "alignment": {
+        "scale_x": 1.0137250615723215,
+        "scale_y": 1.0137250615723215,
+        "raw_iod_ratio": 1.0137250416989407,
+        "angle_deg": -12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.06058594211935997,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.21449118852615356
       }
     },
     {
       "target": "/workspace/assets/photos/yuna/overtime/15fc4612a7c520d2.jpg",
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/15fc4612a7c520d2_v8.jpg",
-      "version": "v8",
+      "version": "v8-frontal",
+      "mode": "frontal",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
-        "x": 97,
-        "y": 0,
-        "w": 807,
-        "h": 1000
+        "x": 220,
+        "y": 148,
+        "w": 561,
+        "h": 549
+      },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": true,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -7.430133819580078
+      },
+      "alignment": {
+        "scale_x": 0.4995489012298732,
+        "scale_y": 0.4995489012298732,
+        "raw_iod_ratio": 0.4995489059179982,
+        "angle_deg": -6.664529800415039
       },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.028359374031424522,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.05555291846394539
       }
     },
     {
@@ -184,6 +248,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/577982c7db09f47c_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -191,14 +256,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -27.7081298828125
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.7099615689196261,
+        "angle_deg": -12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.03910155966877937,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.09187990427017212
       }
     },
     {
@@ -206,6 +278,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/57cb821cf75a0f17_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -213,14 +286,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": 16.416990280151367
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.7905811079358611,
+        "angle_deg": 12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.04511718824505806,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.15860210359096527
       }
     },
     {
@@ -228,6 +308,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/f39b903652c76021_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -235,36 +316,51 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": 23.93787384033203
+      },
+      "alignment": {
+        "scale_x": 0.8406199890242372,
+        "scale_y": 0.8406199890242372,
+        "raw_iod_ratio": 0.8406199527209139,
+        "angle_deg": 12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.05156249925494194,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.14838674664497375
       }
     },
     {
       "target": "/workspace/assets/photos/yuna/tteokbokki/393a407e27fe9d42.jpg",
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/393a407e27fe9d42_v8.jpg",
-      "version": "v8",
+      "version": "v8-frontal",
+      "mode": "frontal",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
-        "x": 97,
-        "y": 0,
-        "w": 807,
-        "h": 1000
+        "x": 220,
+        "y": 148,
+        "w": 561,
+        "h": 549
+      },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": true,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": 2.7262625694274902
+      },
+      "alignment": {
+        "scale_x": 0.6871396181014887,
+        "scale_y": 0.6871396181014887,
+        "raw_iod_ratio": 0.6871395927012955,
+        "angle_deg": 3.49186635017395
       },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.044687505811452866,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.1361217349767685
       }
     },
     {
@@ -272,6 +368,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/094fa0aa8f5cefb2_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -279,14 +376,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": 16.54564094543457
+      },
+      "alignment": {
+        "scale_x": 0.8200000147523681,
+        "scale_y": 0.8200000147523681,
+        "raw_iod_ratio": 0.705220293422143,
+        "angle_deg": 12.0
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.04082031175494194,
-        "jaw_neck_mean": 0.0506591759622097,
-        "hair_overlay_mean": 0.14289022982120514
       }
     },
     {
@@ -294,6 +398,7 @@
       "ok": true,
       "output": "/workspace/data/yuna-identity/method-a-v8-composite/a910e12f188e05e2_v8.jpg",
       "version": "v8",
+      "mode": "general",
       "lock": "/workspace/reference/yuna/01_front_main.jpg",
       "patch_bbox": {
         "x": 97,
@@ -301,14 +406,21 @@
         "w": 807,
         "h": 1000
       },
+      "pose": {
+        "lock_frontal": true,
+        "target_frontal": false,
+        "lock_tilt_deg": -0.7655996084213257,
+        "target_tilt_deg": -20.386016845703125
+      },
+      "alignment": {
+        "scale_x": 1.0298977872495196,
+        "scale_y": 1.0298977872495196,
+        "raw_iod_ratio": 1.0298978428724477,
+        "angle_deg": -12.000000953674316
+      },
       "size": {
         "width": 1536,
         "height": 1024
-      },
-      "zones": {
-        "forehead_fade_mean": 0.05671875178813934,
-        "jaw_neck_mean": 0.0506591796875,
-        "hair_overlay_mean": 0.263092577457428
       }
     }
   ]

@@ -19,6 +19,9 @@ def face_patch_bbox(
     landmarks: FaceLandmarks,
     image_shape: tuple[int, int],
     margin_ratio: float = 0.45,
+    *,
+    below_ratio: float = 1.6,
+    above_ratio: float = 1.1,
 ) -> tuple[int, int, int, int]:
     """Return x, y, w, h for LOCK face patch crop (excludes most hair)."""
     h, w = image_shape[:2]
@@ -30,10 +33,24 @@ def face_patch_bbox(
     mx = bw * margin_ratio
     my = bh * margin_ratio
     x0 = int(max(0, x_min - mx))
-    y0 = int(max(0, y_min - my * 1.1))  # less margin above (hair stays on target)
+    y0 = int(max(0, y_min - my * above_ratio))
     x1 = int(min(w, x_max + mx))
-    y1 = int(min(h, y_max + my * 1.6))  # more margin below for jaw-neck blend
+    y1 = int(min(h, y_max + my * below_ratio))
     return x0, y0, x1 - x0, y1 - y0
+
+
+def face_patch_bbox_frontal(
+    landmarks: FaceLandmarks,
+    image_shape: tuple[int, int],
+) -> tuple[int, int, int, int]:
+    """Tight crop around facial oval — excludes most hair/shoulders."""
+    return face_patch_bbox(
+        landmarks,
+        image_shape,
+        margin_ratio=0.16,
+        below_ratio=0.55,
+        above_ratio=0.35,
+    )
 
 
 def face_oval_mask(
@@ -130,7 +147,8 @@ def region_masks_frontal(
     shape: tuple[int, int],
     offset: tuple[int, int] = (0, 0),
     *,
-    outer_px: int = 20,
+    outer_px: int = 28,
+    inner_px: int = 24,
 ) -> dict[str, np.ndarray]:
     """
     Frontal identity mode: LOCK pixels fill almost entire face oval.
@@ -149,12 +167,12 @@ def region_masks_frontal(
         t = (y - chin_y) / max(36, 1)
         jaw_band[y, :] = max(0.0, 1.0 - t * 0.2)
 
-    alpha = distance_feather_mask(oval > 0.45, inner_px=32, outer_px=outer_px)
-    alpha = np.clip(alpha + jaw_band * 0.08, 0.0, 1.0)
+    alpha = distance_feather_mask(oval > 0.45, inner_px=inner_px, outer_px=outer_px)
+    alpha = np.clip(alpha + jaw_band * 0.12, 0.0, 1.0)
 
     core = cv2.erode(
         (oval > 0.5).astype(np.uint8),
-        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)),
+        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (inner_px, inner_px)),
     ).astype(np.float32)
     # Core = 100% LOCK pixels (identity identical).
     alpha = np.clip(np.maximum(alpha, core), 0.0, 1.0)
