@@ -2,12 +2,7 @@
 """
 v8 LOCK face compositor — identity via pixel lock, natural seams via layered masks.
 
-Fixes v7 stop points:
-  1. pasted look        → face-patch-only warp + frequency blend + Poisson refine
-  2. forehead-hairline  → forehead fade + target fringe hair overlay
-  3. cheek/ear seams    → distance-transform feather (no box gradients)
-  4. jaw-neck sticker   → extended oval + zone LAB transfer
-  5. hair over face     → target fringe hair composited on top
+Frontal mode (--frontal / auto): 정면 얼굴은 LOCK 픽셀을 최대한 동일하게 유지.
 """
 
 from __future__ import annotations
@@ -26,13 +21,14 @@ from blend import (
     frequency_blend,
     lab_transfer_zone,
     laplacian_blend,
+    paste_frontal_identity,
 )
-from landmarks import FaceLandmarkerService
+from landmarks import FaceLandmarkerService, is_frontal, pose_metrics
 from masks import (
     face_patch_bbox,
     fringe_hair_mask,
-    refine_alpha_with_target_skin,
     region_masks,
+    region_masks_frontal,
 )
 from segmentation import (
     ImageSegmenterService,
@@ -69,6 +65,7 @@ def run_composite(
     color_match: float = 0.55,
     hair_overlay_strength: float = 0.95,
     laplacian: bool = False,
+    frontal: str = "auto",
 ) -> dict:
     lock_bgr = _read_bgr(lock_path)
     target_bgr = _read_bgr(target_path)
@@ -86,47 +83,70 @@ def run_composite(
         if target_lm is None:
             raise RuntimeError(f"No face detected in target image: {target_path}")
 
-        # Crop LOCK face patch only — do NOT warp full image (avoids hair mirror artifacts).
+        lock_frontal = is_frontal(lock_lm)
+        target_frontal = is_frontal(target_lm)
+        use_frontal = frontal == "on" or (frontal == "auto" and lock_frontal and target_frontal)
+
         lx, ly, lw, lh = face_patch_bbox(lock_lm, lock_bgr.shape)
         lock_patch = lock_bgr[ly : ly + lh, lx : lx + lw].copy()
 
         matrix = estimate_similarity_transform(
-            lock_lm, target_lm, src_offset=(lx, ly), dst_offset=(0, 0)
+            lock_lm, target_lm, src_offset=(lx, ly), dst_offset=(0, 0), frontal=use_frontal
         )
         lock_warped = warp_patch(lock_patch, matrix, (tw, th))
 
-        zones = region_masks(target_lm, (th, tw))
-        alpha = zones["alpha"]
+        if use_frontal:
+            zones = region_masks_frontal(target_lm, (th, tw))
+            alpha = zones["alpha"]
+        else:
+            zones = region_masks(target_lm, (th, tw))
+            alpha = zones["alpha"]
+            target_cat, target_conf = selfie_segmenter.segment(target_bgr)
+            target_skin = face_skin_mask_from_segmentation(target_cat, target_conf)
+            from masks import refine_alpha_with_target_skin
+            alpha = refine_alpha_with_target_skin(alpha, target_skin)
 
         target_cat, target_conf = selfie_segmenter.segment(target_bgr)
-        target_skin = face_skin_mask_from_segmentation(target_cat, target_conf)
-        alpha = refine_alpha_with_target_skin(alpha, target_skin)
-
         hair_cat, hair_conf = hair_segmenter.segment(target_bgr)
         hair_mask = hair_mask_from_segmentation(hair_cat, hair_conf, use_multiclass=False)
         mc_hair = hair_mask_from_segmentation(target_cat, target_conf, use_multiclass=True)
         hair_mask = np.clip(np.maximum(hair_mask, mc_hair), 0.0, 1.0)
         hair_mask = fringe_hair_mask(hair_mask, target_lm)
-        hair_mask = cv2.GaussianBlur(hair_mask, (7, 7), 1.5)
-        hair_mask = np.clip(hair_mask * hair_overlay_strength, 0.0, 1.0)
+        if use_frontal:
+            from landmarks import oval_points
+            pts = oval_points(target_lm)
+            brow_y = int(np.percentile(pts[:, 1], 12))
+            yy = np.arange(th, dtype=np.float32)[:, None]
+            hair_mask *= (yy < brow_y + 6).astype(np.float32)
+        hair_mask = cv2.GaussianBlur(hair_mask, (5, 5), 1.0)
+        strength = hair_overlay_strength * (0.4 if use_frontal else 1.0)
+        hair_mask = np.clip(hair_mask * strength, 0.0, 1.0)
 
-        # Suppress rectangular patch boundary (black warp padding).
         valid = (lock_warped.sum(axis=2) > 12).astype(np.float32)
         alpha = np.clip(alpha * valid, 0.0, 1.0)
 
-        # Color + lighting match only in transition band (core LOCK pixels untouched).
-        color_zone = np.clip(zones["transition"] + zones["jaw_neck"] * 0.85, 0.0, 1.0)
-        lock_matched = lab_transfer_zone(
-            lock_warped, target_bgr, color_zone, amount=color_match
-        )
-        blend_alpha = np.clip(
-            zones["transition"] + zones["jaw_neck"] * 0.65 + zones["forehead_fade"] * 0.4,
-            0.0,
-            1.0,
-        )
-        lock_blended = frequency_blend(lock_matched, target_bgr, blend_alpha)
+        if use_frontal:
+            lock_blended = lock_warped
+        else:
+            color_zone = np.clip(zones["transition"] + zones["jaw_neck"] * 0.85, 0.0, 1.0)
+            lock_matched = lab_transfer_zone(
+                lock_warped, target_bgr, color_zone, amount=color_match
+            )
+            blend_alpha = np.clip(
+                zones["transition"] + zones["jaw_neck"] * 0.65 + zones["forehead_fade"] * 0.4,
+                0.0,
+                1.0,
+            )
+            lock_blended = frequency_blend(lock_matched, target_bgr, blend_alpha)
 
-        if laplacian:
+        if use_frontal:
+            pasted = paste_frontal_identity(target_bgr, lock_blended, zones["oval"], feather_px=14)
+            result = composite_layers(target_bgr, pasted, alpha, hair_mask)
+            # Re-apply hard LOCK in core so hair overlay cannot erase identity.
+            core = zones["core"] > 0.5
+            valid_core = core & (lock_blended.sum(axis=2) > 12)
+            result[valid_core] = lock_blended[valid_core]
+        elif laplacian:
             merged = laplacian_blend(lock_blended, target_bgr, alpha)
             result = composite_layers(target_bgr, merged, alpha, hair_mask)
         else:
@@ -135,18 +155,23 @@ def run_composite(
         output_path.parent.mkdir(parents=True, exist_ok=True)
         cv2.imwrite(str(output_path), result)
 
+        lock_tilt, lock_nose = pose_metrics(lock_lm)
+        tgt_tilt, tgt_nose = pose_metrics(target_lm)
+
         meta = {
-            "version": "v8",
+            "version": "v8-frontal" if use_frontal else "v8",
+            "mode": "frontal" if use_frontal else "general",
             "lock": str(lock_path),
             "target": str(target_path),
             "output": str(output_path),
             "patch_bbox": {"x": lx, "y": ly, "w": lw, "h": lh},
-            "size": {"width": tw, "height": th},
-            "zones": {
-                "forehead_fade_mean": float(zones["forehead_fade"].mean()),
-                "jaw_neck_mean": float(zones["jaw_neck"].mean()),
-                "hair_overlay_mean": float(hair_mask.mean()),
+            "pose": {
+                "lock_frontal": lock_frontal,
+                "target_frontal": target_frontal,
+                "lock_tilt_deg": lock_tilt,
+                "target_tilt_deg": tgt_tilt,
             },
+            "size": {"width": tw, "height": th},
         }
 
         if debug_dir:
@@ -155,7 +180,6 @@ def run_composite(
             _write_debug(debug_dir / "01_lock_warped.jpg", lock_warped)
             _write_debug(debug_dir / "02_alpha.jpg", _mask_preview(alpha))
             _write_debug(debug_dir / "03_hair_overlay.jpg", _mask_preview(hair_mask))
-            _write_debug(debug_dir / "04_color_zone.jpg", _mask_preview(color_zone))
             _write_debug(debug_dir / "05_result.jpg", result)
             with open(debug_dir / "meta.json", "w", encoding="utf-8") as f:
                 json.dump(meta, f, indent=2)
@@ -173,8 +197,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--target", required=True, help="Body/scene target image")
     parser.add_argument("--output", required=True, help="Output composite path")
     parser.add_argument("--debug-dir", default=None, help="Write mask/debug intermediates")
-    parser.add_argument("--color-match", type=float, default=0.7)
+    parser.add_argument("--color-match", type=float, default=0.55)
     parser.add_argument("--hair-strength", type=float, default=0.95)
+    parser.add_argument("--frontal", choices=["auto", "on", "off"], default="auto")
     parser.add_argument("--no-laplacian", action="store_true")
     args = parser.parse_args(argv)
 
@@ -186,6 +211,7 @@ def main(argv: list[str] | None = None) -> int:
         color_match=args.color_match,
         hair_overlay_strength=args.hair_strength,
         laplacian=not args.no_laplacian,
+        frontal=args.frontal,
     )
     print(json.dumps(meta, indent=2))
     return 0

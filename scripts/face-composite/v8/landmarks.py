@@ -66,3 +66,35 @@ def oval_points(landmarks: FaceLandmarks) -> np.ndarray:
 
 def align_points(landmarks: FaceLandmarks) -> np.ndarray:
     return landmarks.points[ALIGN_INDICES]
+
+
+LEFT_EYE_IDX = (33, 133, 159, 145)
+RIGHT_EYE_IDX = (263, 362, 386, 374)
+NOSE_TIP_IDX = 1
+
+
+def _eye_center(pts: np.ndarray, indices: tuple[int, ...]) -> np.ndarray:
+    return pts[list(indices)].mean(axis=0)
+
+
+def pose_metrics(landmarks: FaceLandmarks) -> tuple[float, float]:
+    """Return (eye_tilt_deg, nose_horizontal_offset_ratio)."""
+    pts = landmarks.points
+    le = _eye_center(pts, LEFT_EYE_IDX)
+    re = _eye_center(pts, RIGHT_EYE_IDX)
+    nose = pts[NOSE_TIP_IDX]
+    eye_dist = float(np.linalg.norm(re - le)) + 1e-6
+    tilt = float(np.degrees(np.arctan2(re[1] - le[1], re[0] - le[0])))
+    mid = (le + re) / 2
+    nose_off = float(abs(nose[0] - mid[0]) / eye_dist)
+    return tilt, nose_off
+
+
+def is_frontal(
+    landmarks: FaceLandmarks,
+    *,
+    max_eye_tilt_deg: float = 10.0,
+    max_nose_offset: float = 0.2,
+) -> bool:
+    tilt, nose_off = pose_metrics(landmarks)
+    return abs(tilt) <= max_eye_tilt_deg and nose_off <= max_nose_offset

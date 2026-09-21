@@ -71,6 +71,8 @@ function main() {
     args['color-match'] ?? '0.65',
     '--hair-strength',
     args['hair-strength'] ?? '0.92',
+    '--frontal',
+    args.frontal ?? 'auto',
   ];
   if (absDebugDir) {
     pyArgs.push('--debug-dir', absDebugDir);

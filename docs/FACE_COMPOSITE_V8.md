@@ -53,6 +53,14 @@ npm run face:composite -- \
 | `--color-match` | 0.7 | 턱·볼 전환대 LAB 색상 매칭 강도 |
 | `--hair-strength` | 0.95 | 타겟 앞머리/옆머리 오버레이 |
 | `--no-laplacian` | off | Laplacian pyramid blend 비활성 |
+| `--frontal` | auto | 정면: LOCK 픽셀 하드 교체 (`auto`/`on`/`off`) |
+
+### 정면 모드 (`--frontal auto`)
+
+LOCK·타겟 모두 정면이면:
+- 회전 최소(±6°), 스케일+이동 정렬
+- 얼굴 타원 **내부 LOCK 픽셀 100%** (`paste_frontal_identity`)
+- 색상/주파수 블렌드 없음 → identity 동일 우선
 
 ## 다음 단계 (로컬)
 

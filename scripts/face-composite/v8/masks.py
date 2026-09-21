@@ -125,6 +125,53 @@ def region_masks(
     }
 
 
+def region_masks_frontal(
+    landmarks: FaceLandmarks,
+    shape: tuple[int, int],
+    offset: tuple[int, int] = (0, 0),
+    *,
+    outer_px: int = 20,
+) -> dict[str, np.ndarray]:
+    """
+    Frontal identity mode: LOCK pixels fill almost entire face oval.
+    Feather only at the outer rim (jaw/cheek), no forehead fade-down.
+    """
+    h, w = shape[:2]
+    oval = face_oval_mask(landmarks, shape, offset, expand=1.03)
+    pts = oval_points(landmarks).copy()
+    pts[:, 0] -= offset[0]
+    pts[:, 1] -= offset[1]
+
+    chin_y = int(pts[:, 1].max())
+    jaw_band = np.zeros((h, w), dtype=np.float32)
+    extend_end = min(h, chin_y + 36)
+    for y in range(chin_y, extend_end):
+        t = (y - chin_y) / max(36, 1)
+        jaw_band[y, :] = max(0.0, 1.0 - t * 0.2)
+
+    alpha = distance_feather_mask(oval > 0.45, inner_px=32, outer_px=outer_px)
+    alpha = np.clip(alpha + jaw_band * 0.08, 0.0, 1.0)
+
+    core = cv2.erode(
+        (oval > 0.5).astype(np.uint8),
+        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)),
+    ).astype(np.float32)
+    # Core = 100% LOCK pixels (identity identical).
+    alpha = np.clip(np.maximum(alpha, core), 0.0, 1.0)
+    alpha = cv2.GaussianBlur(alpha, (0, 0), 1.2)
+    alpha = np.where(core > 0.5, 1.0, alpha)
+    transition = np.clip(alpha - core, 0.0, 1.0)
+
+    return {
+        "oval": oval,
+        "core": core,
+        "transition": transition,
+        "forehead_fade": np.zeros((h, w), dtype=np.float32),
+        "jaw_neck": jaw_band,
+        "alpha": alpha,
+    }
+
+
 def refine_alpha_with_target_skin(
     alpha: np.ndarray,
     target_skin_mask: np.ndarray,

@@ -114,6 +114,40 @@ def laplacian_blend(
     return np.clip(out, 0, 255).astype(np.uint8)
 
 
+def paste_frontal_identity(
+    target_bgr: np.ndarray,
+    lock_warped_bgr: np.ndarray,
+    oval_mask: np.ndarray,
+    *,
+    feather_px: int = 16,
+) -> np.ndarray:
+    """
+    정면 identity: 타원 내부는 LOCK 픽셀 100% 교체, 가장자리 링만 페더.
+    """
+    h, w = oval_mask.shape[:2]
+    bin_u8 = (oval_mask > 0.48).astype(np.uint8)
+    if cv2.countNonZero(bin_u8) < 100:
+        return target_bgr
+
+    valid = (lock_warped_bgr.sum(axis=2) > 12)
+    dist_in = cv2.distanceTransform(bin_u8, cv2.DIST_L2, 5)
+    result = target_bgr.astype(np.float32)
+    lock_f = lock_warped_bgr.astype(np.float32)
+    tgt_f = target_bgr.astype(np.float32)
+
+    hard = (dist_in > feather_px) & valid
+    result[hard] = lock_f[hard]
+
+    ring = (dist_in > 0) & (dist_in <= feather_px) & valid
+    t = np.clip(dist_in / max(feather_px, 1), 0.0, 1.0)
+    for c in range(3):
+        ch = result[:, :, c]
+        ch[ring] = lock_f[:, :, c][ring] * t[ring] + tgt_f[:, :, c][ring] * (1.0 - t[ring])
+        result[:, :, c] = ch
+
+    return np.clip(result, 0, 255).astype(np.uint8)
+
+
 def composite_layers(
     target_bgr: np.ndarray,
     lock_warped_bgr: np.ndarray,
