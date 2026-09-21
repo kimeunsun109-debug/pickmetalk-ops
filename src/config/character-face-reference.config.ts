@@ -7,6 +7,10 @@
  */
 import type { CharacterVisualSpec } from '../data/character-specs.js';
 import { getCharacterSpecBySlug } from '../data/character-specs.js';
+import {
+  YUNA_LOCK_IDENTITY_PROMPT,
+  YUNA_LOCK_NEGATIVE_PROMPT,
+} from './yuna-lock-identity.config.js';
 
 export interface CharacterFaceIdentity {
   slug: string;
@@ -70,9 +74,19 @@ function buildIdentityFromSpec(spec: CharacterVisualSpec): CharacterFaceIdentity
   };
 }
 
+function buildYunaLockIdentity(): CharacterFaceIdentity {
+  const spec = getCharacterSpecBySlug('yuna')!;
+  return {
+    slug: 'yuna',
+    name: spec.name,
+    identityPrompt: YUNA_LOCK_IDENTITY_PROMPT,
+    identityNegative: YUNA_LOCK_NEGATIVE_PROMPT,
+  };
+}
+
 /** Pre-built identity locks for all 5 characters */
 export const CHARACTER_FACE_IDENTITIES: Record<string, CharacterFaceIdentity> = {
-  yuna: buildIdentityFromSpec(getCharacterSpecBySlug('yuna')!),
+  yuna: buildYunaLockIdentity(),
   narin: buildIdentityFromSpec(getCharacterSpecBySlug('narin')!),
   yunseo: buildIdentityFromSpec(getCharacterSpecBySlug('yunseo')!),
   eunha: buildIdentityFromSpec(getCharacterSpecBySlug('eunha')!),

@@ -1,0 +1,31 @@
+{
+  "character": "yuna",
+  "lockPrimary": "/workspace/reference/yuna/01_front_main.jpg",
+  "methods": {
+    "pixelLock": "npm run face:composite -- --character=yuna --target=<body.jpg>",
+    "mjCref": "MJ_CREF_YUNA + buildCharacterMjCommand",
+    "comfyui": "IP-Adapter Face / reference image = 01_front_main (no InstantID redraw)"
+  },
+  "positive": "SAME PERSON every photo — Yuna, 22 year old Korean woman, oval face, soft delicate jawline, small rounded chin, large dark brown almond eyes, double eyelid, warm peach eyeshadow, long fine lashes, slim straight nose bridge, small slightly upturned tip, soft highlight on bridge, full lips, glossy peach-coral tint, subtle parted smile showing upper teeth edge, porcelain dewy skin, soft peach blush on cheek apples, natural pores minimal, long straight dark brown black hair, fine wispy strands across forehead and cheeks, NEVER change face shape, eye shape, nose, or bone structure, identical facial identity to LOCK reference 01_front_main, photorealistic, shot on iPhone, no beauty filter",
+  "negative": "different person, different face, face morph, identity drift, western features, blonde hair, blue eyes, short bob, cartoon, anime, illustration, 3d render, plastic skin, over-smoothed skin, deformed face, asymmetrical eyes, heavy makeup change, wrong lip color",
+  "comfyuiWorkflowHints": [
+    "Load Image → 01_front_main.jpg as IPAdapter face reference",
+    "Keep denoise ≤ 0.45 for img2img body-only passes",
+    "Do NOT use face swap nodes that regenerate identity",
+    "Post: npm run face:composite for pixel-perfect LOCK overlay"
+  ],
+  "scenes": [
+    {
+      "id": "cafe",
+      "prompt": "SAME PERSON every photo — Yuna, 22 year old Korean woman, oval face, soft delicate jawline, small rounded chin, large dark brown almond eyes, double eyelid, warm peach eyeshadow, long fine lashes, slim straight nose bridge, small slightly upturned tip, soft highlight on bridge, full lips, glossy peach-coral tint, subtle parted smile showing upper teeth edge, porcelain dewy skin, soft peach blush on cheek apples, natural pores minimal, long straight dark brown black hair, fine wispy strands across forehead and cheeks, NEVER change face shape, eye shape, nose, or bone structure, identical facial identity to LOCK reference 01_front_main, photorealistic, shot on iPhone, no beauty filter, sitting in cafe, holding latte"
+    },
+    {
+      "id": "campus",
+      "prompt": "SAME PERSON every photo — Yuna, 22 year old Korean woman, oval face, soft delicate jawline, small rounded chin, large dark brown almond eyes, double eyelid, warm peach eyeshadow, long fine lashes, slim straight nose bridge, small slightly upturned tip, soft highlight on bridge, full lips, glossy peach-coral tint, subtle parted smile showing upper teeth edge, porcelain dewy skin, soft peach blush on cheek apples, natural pores minimal, long straight dark brown black hair, fine wispy strands across forehead and cheeks, NEVER change face shape, eye shape, nose, or bone structure, identical facial identity to LOCK reference 01_front_main, photorealistic, shot on iPhone, no beauty filter, university campus walkway, backpack"
+    },
+    {
+      "id": "home",
+      "prompt": "SAME PERSON every photo — Yuna, 22 year old Korean woman, oval face, soft delicate jawline, small rounded chin, large dark brown almond eyes, double eyelid, warm peach eyeshadow, long fine lashes, slim straight nose bridge, small slightly upturned tip, soft highlight on bridge, full lips, glossy peach-coral tint, subtle parted smile showing upper teeth edge, porcelain dewy skin, soft peach blush on cheek apples, natural pores minimal, long straight dark brown black hair, fine wispy strands across forehead and cheeks, NEVER change face shape, eye shape, nose, or bone structure, identical facial identity to LOCK reference 01_front_main, photorealistic, shot on iPhone, no beauty filter, cozy living room, weekend relax"
+    }
+  ]
+}

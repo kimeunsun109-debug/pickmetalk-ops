@@ -36,6 +36,7 @@
     "mj:auto": "PICKMETALK_RUNTIME=production tsx scripts/mj-auto-generate.ts",
     "face:composite": "tsx scripts/face-composite-run.ts",
     "face:models": "bash scripts/face-composite/download-models.sh",
+    "yuna:identity": "tsx scripts/yuna-identity-workbench.ts",
     "photos:publish-product": "tsx scripts/publish-photo-to-product.ts",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -80,9 +80,10 @@ describe('character-face-reference.config', () => {
     }
   });
 
-  it('yuna identity includes puppy-like face', () => {
+  it('yuna identity uses LOCK 01_front_main prompt', () => {
     const yuna = getCharacterFaceIdentity('yuna')!;
-    expect(yuna.identityPrompt).toContain('강아지상');
+    expect(yuna.identityPrompt).toContain('01_front_main');
+    expect(yuna.identityPrompt).toContain('peach-coral');
     expect(yuna.name).toBe('유나');
   });
 
