@@ -8,6 +8,8 @@ test-fixtures/
 reference/**/*.jpg
 reference/**/*.jpeg
 reference/**/*.png
+!reference/**/01_front_main.jpg
+!reference/**/01_front_main.png
 reference/**/*.webp
 reference/**/*.mp4
 D:/
@@ -31,3 +33,4 @@ venv/
 scripts/face-composite/models/*.tflite
 scripts/face-composite/models/*.task
 data/face-composite/
+data/yuna-identity/
