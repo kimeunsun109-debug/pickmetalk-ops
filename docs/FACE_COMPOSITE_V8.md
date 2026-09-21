@@ -58,9 +58,10 @@ npm run face:composite -- \
 ### 정면 모드 (`--frontal auto`)
 
 LOCK·타겟 모두 정면이면:
-- 회전 최소(±6°), 스케일+이동 정렬
-- 얼굴 타원 **내부 LOCK 픽셀 100%** (`paste_frontal_identity`)
-- 색상/주파수 블렌드 없음 → identity 동일 우선
+- 5점 anchor 정렬 + **실제 눈 간격 비율 스케일** (0.45–1.55, 클램프 0.9 버그 수정)
+- 얼굴 패치만 타이트 크롭 (머리/어깨 제외)
+- 코어: LOCK 픽셀 + 미세 L채널 밝기 맞춤
+- 링(턱·볼): LAB 색상 + frequency blend로 스티커 경계 완화
 
 ## 다음 단계 (로컬)
 

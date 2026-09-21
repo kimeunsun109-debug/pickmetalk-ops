@@ -15,17 +15,18 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from align import estimate_similarity_transform, warp_patch
+from align import alignment_metrics, estimate_similarity_transform, warp_patch
 from blend import (
     composite_layers,
     frequency_blend,
+    harmonize_frontal_identity,
     lab_transfer_zone,
     laplacian_blend,
-    paste_frontal_identity,
 )
 from landmarks import FaceLandmarkerService, is_frontal, pose_metrics
 from masks import (
     face_patch_bbox,
+    face_patch_bbox_frontal,
     fringe_hair_mask,
     region_masks,
     region_masks_frontal,
@@ -87,12 +88,16 @@ def run_composite(
         target_frontal = is_frontal(target_lm)
         use_frontal = frontal == "on" or (frontal == "auto" and lock_frontal and target_frontal)
 
-        lx, ly, lw, lh = face_patch_bbox(lock_lm, lock_bgr.shape)
+        if use_frontal:
+            lx, ly, lw, lh = face_patch_bbox_frontal(lock_lm, lock_bgr.shape)
+        else:
+            lx, ly, lw, lh = face_patch_bbox(lock_lm, lock_bgr.shape)
         lock_patch = lock_bgr[ly : ly + lh, lx : lx + lw].copy()
 
         matrix = estimate_similarity_transform(
             lock_lm, target_lm, src_offset=(lx, ly), dst_offset=(0, 0), frontal=use_frontal
         )
+        align_meta = alignment_metrics(matrix, lock_lm, target_lm, (lx, ly), (0, 0))
         lock_warped = warp_patch(lock_patch, matrix, (tw, th))
 
         if use_frontal:
@@ -124,6 +129,7 @@ def run_composite(
 
         valid = (lock_warped.sum(axis=2) > 12).astype(np.float32)
         alpha = np.clip(alpha * valid, 0.0, 1.0)
+        zones["valid_warp"] = valid
 
         if use_frontal:
             lock_blended = lock_warped
@@ -140,12 +146,18 @@ def run_composite(
             lock_blended = frequency_blend(lock_matched, target_bgr, blend_alpha)
 
         if use_frontal:
-            pasted = paste_frontal_identity(target_bgr, lock_blended, zones["oval"], feather_px=14)
+            pasted = harmonize_frontal_identity(
+                target_bgr,
+                lock_blended,
+                zones,
+                color_match=max(color_match, 0.68),
+                core_luma=0.28,
+                feather_px=24,
+            )
             result = composite_layers(target_bgr, pasted, alpha, hair_mask)
-            # Re-apply hard LOCK in core so hair overlay cannot erase identity.
-            core = zones["core"] > 0.5
-            valid_core = core & (lock_blended.sum(axis=2) > 12)
-            result[valid_core] = lock_blended[valid_core]
+            valid_warp = zones.get("valid_warp", valid) > 0.5
+            core = (zones["core"] > 0.5) & valid_warp & (hair_mask < 0.4)
+            result[core] = pasted[core]
         elif laplacian:
             merged = laplacian_blend(lock_blended, target_bgr, alpha)
             result = composite_layers(target_bgr, merged, alpha, hair_mask)
@@ -171,6 +183,7 @@ def run_composite(
                 "lock_tilt_deg": lock_tilt,
                 "target_tilt_deg": tgt_tilt,
             },
+            "alignment": align_meta,
             "size": {"width": tw, "height": th},
         }
 
