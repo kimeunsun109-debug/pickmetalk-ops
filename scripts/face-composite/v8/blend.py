@@ -135,14 +135,55 @@ def _luminance_adapt(
     return _from_lab(out_lab)
 
 
+def _adaptive_core_luma(
+    lock_bgr: np.ndarray,
+    target_bgr: np.ndarray,
+    core: np.ndarray,
+) -> float:
+    zone = core > 0.45
+    if not np.any(zone):
+        return 0.22
+    lock_l = _to_lab(lock_bgr)[:, :, 0][zone]
+    tgt_l = _to_lab(target_bgr)[:, :, 0][zone]
+    delta = abs(float(tgt_l.mean() - lock_l.mean()))
+    return float(np.clip(0.12 + delta / 120.0, 0.12, 0.48))
+
+
+def poisson_rim_refine(
+    composite_bgr: np.ndarray,
+    target_bgr: np.ndarray,
+    zones: dict[str, np.ndarray],
+    valid: np.ndarray,
+) -> np.ndarray:
+    """Poisson clone on transition ring only — lighting seam, core untouched."""
+    core = zones["core"] > 0.5
+    transition = zones.get("transition", np.zeros_like(core, dtype=np.float32))
+    rim = (transition > 0.12) & ~core & (valid > 0.5)
+    rim_u8 = (rim.astype(np.uint8) * 255)
+    if cv2.countNonZero(rim_u8) < 80:
+        return composite_bgr
+    ys, xs = np.where(rim_u8 > 0)
+    cx, cy = int(xs.mean()), int(ys.mean())
+    try:
+        refined = cv2.seamlessClone(composite_bgr, target_bgr, rim_u8, (cx, cy), cv2.MIXED_CLONE)
+    except cv2.error:
+        return composite_bgr
+    out = composite_bgr.copy()
+    out[rim] = refined[rim]
+    out[core & (valid > 0.5)] = composite_bgr[core & (valid > 0.5)]
+    return out
+
+
 def harmonize_frontal_identity(
     target_bgr: np.ndarray,
     lock_warped_bgr: np.ndarray,
     zones: dict[str, np.ndarray],
     *,
     color_match: float = 0.62,
-    core_luma: float = 0.2,
+    core_luma: float | None = None,
     feather_px: int = 22,
+    poisson_rim: bool = True,
+    identity_boost: bool = False,
 ) -> np.ndarray:
     """
     정면 identity: 코어는 LOCK 픽셀 유지 + 미세 밝기 맞춤, 링만 색상/주파수 블렌드.
@@ -156,16 +197,31 @@ def harmonize_frontal_identity(
         return target_bgr
 
     valid = (lock_warped_bgr.sum(axis=2) > 12).astype(np.float32)
-    lock_core = _luminance_adapt(lock_warped_bgr, target_bgr, core * valid, amount=core_luma)
+    if identity_boost:
+        luma = 0.0
+        rim_color = min(color_match, 0.45)
+        feather_px = min(feather_px, 14)
+    else:
+        luma = core_luma if core_luma is not None else _adaptive_core_luma(lock_warped_bgr, target_bgr, core)
+        luma = min(luma, 0.18)
+        rim_color = color_match
+    lock_core = (
+        lock_warped_bgr
+        if luma <= 0.01
+        else _luminance_adapt(lock_warped_bgr, target_bgr, core * valid, amount=luma)
+    )
 
     ring_zone = np.clip(transition + zones.get("jaw_neck", 0) * 0.5, 0.0, 1.0)
-    lock_matched = lab_transfer_zone(
-        lock_warped_bgr,
-        target_bgr,
-        ring_zone,
-        amount=color_match,
-    )
-    lock_blend = frequency_blend(lock_matched, target_bgr, ring_zone, low_sigma=5.0)
+    if identity_boost:
+        lock_blend = lock_warped_bgr
+    else:
+        lock_matched = lab_transfer_zone(
+            lock_warped_bgr,
+            target_bgr,
+            ring_zone,
+            amount=rim_color,
+        )
+        lock_blend = frequency_blend(lock_matched, target_bgr, ring_zone, low_sigma=5.0)
 
     dist_in = cv2.distanceTransform(bin_u8, cv2.DIST_L2, 5)
     result = target_bgr.astype(np.float32)
@@ -190,7 +246,10 @@ def harmonize_frontal_identity(
         ch[ring] = lock_f[:, :, c][ring] * t[ring] + tgt_f[:, :, c][ring] * (1.0 - t[ring])
         result[:, :, c] = ch
 
-    return np.clip(result, 0, 255).astype(np.uint8)
+    out = np.clip(result, 0, 255).astype(np.uint8)
+    if poisson_rim:
+        out = poisson_rim_refine(out, target_bgr, zones, valid)
+    return out
 
 
 def composite_layers(

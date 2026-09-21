@@ -63,6 +63,20 @@ LOCK·타겟 모두 정면이면:
 - 코어: LOCK 픽셀 + 미세 L채널 밝기 맞춤
 - 링(턱·볼): LAB 색상 + frequency blend로 스티커 경계 완화
 
+## QA (PASS 기준)
+
+랜드마크 정렬 face crop 유사도 **≥ 0.85**:
+
+```bash
+npm run face:pass-loop -- \
+  --lock=reference/yuna/01_front_main.jpg \
+  --targets assets/photos/yuna/hair/6ad876ce59fc0862.jpg \
+  --output-dir data/face-composite/output/yuna \
+  --min-pass 1
+```
+
+실패 시 `identity_boost` 자동 재시도 (pass-loop).
+
 ## 다음 단계 (로컬)
 
 1. 실제 `01_front_main`으로 테스트 (현재 repo는 dev fallback selfie 사용)

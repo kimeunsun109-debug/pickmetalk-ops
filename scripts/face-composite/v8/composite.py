@@ -67,6 +67,7 @@ def run_composite(
     hair_overlay_strength: float = 0.95,
     laplacian: bool = False,
     frontal: str = "auto",
+    identity_boost: bool = False,
 ) -> dict:
     lock_bgr = _read_bgr(lock_path)
     target_bgr = _read_bgr(target_path)
@@ -86,7 +87,12 @@ def run_composite(
 
         lock_frontal = is_frontal(lock_lm)
         target_frontal = is_frontal(target_lm)
-        use_frontal = frontal == "on" or (frontal == "auto" and lock_frontal and target_frontal)
+        tgt_tilt, _ = pose_metrics(target_lm)
+        near_frontal = abs(tgt_tilt) <= 32.0
+        use_frontal = (
+            frontal == "on"
+            or (frontal == "auto" and lock_frontal and (target_frontal or near_frontal))
+        )
 
         if use_frontal:
             lx, ly, lw, lh = face_patch_bbox_frontal(lock_lm, lock_bgr.shape)
@@ -146,13 +152,16 @@ def run_composite(
             lock_blended = frequency_blend(lock_matched, target_bgr, blend_alpha)
 
         if use_frontal:
+            boost = identity_boost or (near_frontal and not target_frontal)
             pasted = harmonize_frontal_identity(
                 target_bgr,
                 lock_blended,
                 zones,
-                color_match=max(color_match, 0.68),
-                core_luma=0.28,
-                feather_px=24,
+                color_match=max(color_match, 0.65),
+                core_luma=0.1 if not boost else 0.0,
+                feather_px=20,
+                poisson_rim=(target_frontal and not boost),
+                identity_boost=boost,
             )
             result = composite_layers(target_bgr, pasted, alpha, hair_mask)
             valid_warp = zones.get("valid_warp", valid) > 0.5

@@ -21,7 +21,6 @@ import {
   YUNA_LOCK_NEGATIVE_PROMPT,
   YUNA_LOCK_PATHS,
 } from '../src/config/yuna-lock-identity.config.js';
-import { extractFaceEmbedding, cosineSimilarity } from '../src/lib/midjourney-production/face-verifier.js';
 
 const REPO = process.cwd();
 const OUT = join(REPO, 'data', 'yuna-identity');
@@ -56,10 +55,10 @@ function findYunaBodyTargets(): string[] {
 
 function methodA(lock: string, targets: string[]) {
   mkdirSync(METHOD_A, { recursive: true });
-  const py = join(REPO, 'scripts', 'face-composite', 'batch-composite.py');
+  const py = join(REPO, 'scripts', 'face-composite', 'pass-loop.py');
   const r = spawnSync(
     'python3',
-    [py, '--lock', lock, '--targets', ...targets, '--output-dir', METHOD_A],
+    [py, '--lock', lock, '--targets', ...targets, '--output-dir', METHOD_A, '--min-pass', '0'],
     { cwd: REPO, stdio: 'inherit' },
   );
   return r.status === 0;
@@ -122,33 +121,57 @@ function methodC() {
   console.log(`✓ Method C: ${METHOD_C}/yuna-identity-prompt-pack.json`);
 }
 
-async function methodD(lock: string, compositeDir: string) {
+function methodD(lock: string, compositeDir: string) {
   mkdirSync(METHOD_D, { recursive: true });
-  const lockEmb = await extractFaceEmbedding(lock);
-  const rows: Array<{ file: string; similarity: number; percent: number }> = [];
+  const passLoop = join(REPO, 'scripts', 'face-composite', 'pass-loop.py');
+  const targets = existsSync(compositeDir)
+    ? readdirSync(compositeDir)
+        .filter((f) => /_v8\.(jpg|jpeg|png)$/i.test(f))
+        .map((f) => join(compositeDir, f))
+    : [];
 
-  if (existsSync(compositeDir)) {
-    for (const f of readdirSync(compositeDir)) {
-      if (!/\.(jpg|jpeg|png)$/i.test(f)) continue;
-      const p = join(compositeDir, f);
-      const emb = await extractFaceEmbedding(p);
-      const sim = cosineSimilarity(lockEmb, emb);
-      rows.push({ file: f, similarity: sim, percent: Math.round(sim * 1000) / 10 });
-    }
+  if (targets.length === 0) {
+    const empty = {
+      lock,
+      method: 'landmark_aligned_face_crop',
+      note: 'Run Method A first',
+      results: [],
+      passThreshold: 0.85,
+      passed: 0,
+      total: 0,
+    };
+    writeFileSync(join(METHOD_D, 'qa-report.json'), JSON.stringify(empty, null, 2), 'utf-8');
+    console.log(`✓ Method D: ${METHOD_D}/qa-report.json (0/0 pass)`);
+    return;
   }
 
-  rows.sort((a, b) => b.similarity - a.similarity);
-  const report = {
-    lock,
-    method: 'heuristic_face_region_embedding',
-    note: 'Production should upgrade to InsightFace; this is ops smoke QA',
-    results: rows,
-    passThreshold: 0.85,
-    passed: rows.filter((r) => r.similarity >= 0.85).length,
-    total: rows.length,
-  };
-  writeFileSync(join(METHOD_D, 'qa-report.json'), JSON.stringify(report, null, 2), 'utf-8');
-  console.log(`✓ Method D: ${METHOD_D}/qa-report.json (${report.passed}/${report.total} pass)`);
+  const r = spawnSync(
+    'python3',
+    [passLoop, '--lock', lock, '--targets', ...targets, '--output-dir', compositeDir, '--min-pass', '0'],
+    { cwd: REPO, encoding: 'utf-8' },
+  );
+  const reportPath = join(compositeDir, 'pass-loop-report.json');
+  if (existsSync(reportPath)) {
+    const report = JSON.parse(readFileSync(reportPath, 'utf-8'));
+    const qa = {
+      lock,
+      method: report.qa?.method ?? 'landmark_aligned_face_crop',
+      note: 'MediaPipe-aligned face crop QA (upgrade to InsightFace in production)',
+      passThreshold: report.pass_threshold ?? 0.85,
+      passed: report.qa_passed ?? 0,
+      total: report.qa_total ?? 0,
+      results: (report.qa?.results ?? []).map((row: { path: string; similarity: number; percent: number; passed: boolean }) => ({
+        file: basename(row.path),
+        similarity: row.similarity,
+        percent: row.percent,
+        passed: row.passed,
+      })),
+    };
+    writeFileSync(join(METHOD_D, 'qa-report.json'), JSON.stringify(qa, null, 2), 'utf-8');
+    console.log(`✓ Method D: ${METHOD_D}/qa-report.json (${qa.passed}/${qa.total} pass)`);
+    return;
+  }
+  console.error(r.stderr || r.stdout);
 }
 
 async function main() {
@@ -180,7 +203,7 @@ async function main() {
   methodC();
 
   console.log('\n--- Method D: face QA ---');
-  await methodD(lock, METHOD_A);
+  methodD(lock, METHOD_A);
 
   const readme = [
     '# Yuna Identity Workbench Output',

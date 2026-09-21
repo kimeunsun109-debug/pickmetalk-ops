@@ -93,8 +93,8 @@ def pose_metrics(landmarks: FaceLandmarks) -> tuple[float, float]:
 def is_frontal(
     landmarks: FaceLandmarks,
     *,
-    max_eye_tilt_deg: float = 10.0,
-    max_nose_offset: float = 0.2,
+    max_eye_tilt_deg: float = 28.0,
+    max_nose_offset: float = 0.28,
 ) -> bool:
     tilt, nose_off = pose_metrics(landmarks)
     return abs(tilt) <= max_eye_tilt_deg and nose_off <= max_nose_offset
