@@ -1,0 +1,315 @@
+{
+  "lock": "/workspace/reference/yuna/01_front_main.jpg",
+  "total": 14,
+  "ok": 14,
+  "results": [
+    {
+      "target": "/workspace/assets/photos/yuna/coffee/91444de42876e6a3.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/91444de42876e6a3_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.04468749836087227,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.15334159135818481
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/hair/219b5ad346fad717.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/219b5ad346fad717_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.035234373062849045,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.12233620882034302
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/hair/6ad876ce59fc0862.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/6ad876ce59fc0862_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.03394531086087227,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.07978429645299911
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/happy/97f13b4d416ca618.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/97f13b4d416ca618_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.04339843988418579,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.1460438221693039
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/morning/67486135aa6b319a.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/67486135aa6b319a_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.03996093571186066,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.11273881793022156
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/nail/aecdc211e1392727.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/aecdc211e1392727_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.05585937201976776,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.2148463875055313
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/nail/f918f53ee3242943.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/f918f53ee3242943_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.06058594211935997,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.21449118852615356
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/overtime/15fc4612a7c520d2.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/15fc4612a7c520d2_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.028359374031424522,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.05555291846394539
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/rain/577982c7db09f47c.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/577982c7db09f47c_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.03910155966877937,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.09187990427017212
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/rain/57cb821cf75a0f17.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/57cb821cf75a0f17_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.04511718824505806,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.15860210359096527
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/selfie/f39b903652c76021.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/f39b903652c76021_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.05156249925494194,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.14838674664497375
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/tteokbokki/393a407e27fe9d42.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/393a407e27fe9d42_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.044687505811452866,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.1361217349767685
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/weekend/094fa0aa8f5cefb2.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/094fa0aa8f5cefb2_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.04082031175494194,
+        "jaw_neck_mean": 0.0506591759622097,
+        "hair_overlay_mean": 0.14289022982120514
+      }
+    },
+    {
+      "target": "/workspace/assets/photos/yuna/weekend/a910e12f188e05e2.jpg",
+      "ok": true,
+      "output": "/workspace/data/yuna-identity/method-a-v8-composite/a910e12f188e05e2_v8.jpg",
+      "version": "v8",
+      "lock": "/workspace/reference/yuna/01_front_main.jpg",
+      "patch_bbox": {
+        "x": 97,
+        "y": 0,
+        "w": 807,
+        "h": 1000
+      },
+      "size": {
+        "width": 1536,
+        "height": 1024
+      },
+      "zones": {
+        "forehead_fade_mean": 0.05671875178813934,
+        "jaw_neck_mean": 0.0506591796875,
+        "hair_overlay_mean": 0.263092577457428
+      }
+    }
+  ]
+}
