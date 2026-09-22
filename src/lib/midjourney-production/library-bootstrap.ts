@@ -13,6 +13,7 @@ import {
   PICKMETALK_RUNTIME,
   validateNoHybridPath,
 } from '../../config/runtime-environment.config.js';
+import { LORA_BASE_FOLDER } from '../../config/character-lora.config.js';
 import { ensureUniverseDirs } from '../photo-universe/paths.js';
 
 export interface BootstrapResult {
@@ -55,6 +56,12 @@ export function bootstrapPhotoLibrary(force = false): BootstrapResult {
     charactersCreated.push(slug);
     mkdirSync(join(MJ_PRODUCTION_PATHS.faceRefs, slug), { recursive: true });
 
+    const baseDir = join(PHOTO_LIBRARY_ROOT, LORA_BASE_FOLDER, slug);
+    if (!existsSync(baseDir) || force) {
+      mkdirSync(baseDir, { recursive: true });
+      foldersCreated++;
+    }
+
     for (const folder of MJ_LIBRARY_FOLDERS) {
       const path = join(PHOTO_LIBRARY_ROOT, slug, folder);
       if (!existsSync(path) || force) {
@@ -82,6 +89,7 @@ export function printBootstrapReport(result: BootstrapResult): void {
   console.log(`Library root : ${result.libraryRoot}`);
   console.log(`Import watch : ${result.importWatchFolder}`);
   console.log(`Characters   : ${result.charactersCreated.join(', ')}`);
+  console.log(`LoRA base    : ${join(result.libraryRoot, 'base', '{character}')} (Midjourney faces, no composite)`);
   console.log(`Categories   : ${MJ_LIBRARY_FOLDERS.filter((f) => !f.startsWith('_')).join(', ')}`);
   console.log(`Folders      : ${result.foldersCreated} created`);
   console.log(result.alreadyExisted ? '(library existed — missing folders added)' : '(fresh install)');

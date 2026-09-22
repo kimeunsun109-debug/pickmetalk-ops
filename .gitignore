@@ -28,3 +28,5 @@ __pycache__/
 .cache/
 .venv/
 venv/
+data/lora/**
+!data/lora/.gitkeep

@@ -18,6 +18,12 @@
 
 ```
 D:\PickMeTalk_PhotoLibrary\
+  base\            ← LoRA용 미드저니 얼굴. 합성 금지. docs/CHARACTER_LORA_RTX.md
+    yuna\
+    narin\
+    yunseo\
+    eunha\
+    jiyu\
   yuna\
     cafe\
       a1b2c3d4e5f6g7h8.jpg

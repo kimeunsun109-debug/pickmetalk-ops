@@ -1,0 +1,11 @@
+torch
+diffusers>=0.32
+transformers>=4.44
+accelerate>=0.34
+peft>=0.13
+safetensors
+pillow
+numpy
+opencv-python-headless
+insightface
+onnxruntime-gpu
