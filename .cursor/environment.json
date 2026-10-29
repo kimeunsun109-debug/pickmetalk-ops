@@ -1,0 +1,20 @@
+{
+  "name": "pickmetalk-ops",
+  "user": "ubuntu",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "api",
+      "command": "npm run dev"
+    },
+    {
+      "name": "web",
+      "command": "API_ORIGIN=http://localhost:3000 npm run dev --prefix web"
+    },
+    {
+      "name": "worker",
+      "command": "npm run worker"
+    }
+  ]
+}
